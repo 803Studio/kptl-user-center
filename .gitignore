@@ -22,4 +22,5 @@ go.work
 
 .idea
 keys
+bin
 app.config.yml

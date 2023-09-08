@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/803Studio/kptl-user-center/internal/config"
+	"github.com/803Studio/kptl-user-center/internal/model"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 )
@@ -31,6 +32,18 @@ func Init() error {
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(config.AppConfig.Maria.Conn)
 	db.SetMaxIdleConns(config.AppConfig.Maria.Conn)
+
+	SelectUserAccountByWxId = createSelectByApi[string, *model.UserAccount](
+		config.AppConfig.Maria.Tables.Users,
+		"wxid",
+		func() *model.UserAccount {
+			return new(model.UserAccount)
+		},
+	)
+
+	InsertIntoUserAccount = createInsertApi[*model.UserAccount](
+		config.AppConfig.Maria.Tables.Users,
+	)
 
 	return nil
 }
